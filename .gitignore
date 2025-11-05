@@ -1,30 +1,6 @@
-# Ignore virtual environments
+﻿# Ignore Python virtual environments
+.venv_smoke/
 venv/
-.venv/
-env/
-ENV/
-
-# Ignore caches
+.env/
 __pycache__/
 *.pyc
-*.pyo
-
-# Ignore large or generated files
-*.pt
-*.h5
-*.pkl
-*.npy
-*.npz
-results/
-data/
-
-# Logs and temp files
-*.log
-logs/
-
-# IDE / OS files
-.vscode/
-.DS_Store
-Thumbs.db
-"venv/" 
-".venv_smoke/" 

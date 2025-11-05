@@ -54,4 +54,15 @@ HybridContrastiveTrollDetection/
 ├── evaluate.py # Model evaluation and visualization
 ├── requirements.txt # Dependencies list
 └── README.md # Project documentation
+---
+## 🧪 Execution Proof
+
+Below is the output of the smoke test demonstrating successful execution of the training script:
+
+![Execution Screenshot](results/run_success.png)
+
+✅ The script `train_hybrid_model.py` runs successfully on sample data  
+✅ Results and metrics are automatically saved to the `results/` folder  
+✅ Tested on Python 3.11 + PyTorch 2.0.1 (CPU)
+
 
