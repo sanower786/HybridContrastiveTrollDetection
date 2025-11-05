@@ -64,5 +64,8 @@ Below is the output of the smoke test demonstrating successful execution of the 
 ✅ The script `train_hybrid_model.py` runs successfully on sample data  
 ✅ Results and metrics are automatically saved to the `results/` folder  
 ✅ Tested on Python 3.11 + PyTorch 2.0.1 (CPU)
+## 🧩 Model Flowchart
+![HybridContrastiveTrollDetection Flowchart](Image/flowchart.png)
+
 
 
