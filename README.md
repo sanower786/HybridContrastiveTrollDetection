@@ -54,6 +54,16 @@ HybridContrastiveTrollDetection/
 ├── evaluate.py # Model evaluation and visualization
 ├── requirements.txt # Dependencies list
 └── README.md # Project documentation
+
+### Run Instructions
+1. Clone the repository:
+   git clone https://github.com/sanower786/HybridContrastiveTrollDetection.git
+2. Create environment:
+   python -m venv .venv
+   pip install -r requirements.txt
+3. Run training:
+   bash run_smoke.sh
+
 ---
 ## 🧪 Execution Proof
 
