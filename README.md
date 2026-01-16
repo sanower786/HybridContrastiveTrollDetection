@@ -1,4 +1,4 @@
-# 🧠 Hybrid Contrastive Learning with Psycholinguistic Augmentation for Robust Troll Detection
+# 🧠 Hybrid Contrastive Learning with Text-Derived Psycholinguistic Features for Robust Troll Detection
 
 ### Official Replication Repository for the Paper Submitted to *Pattern Analysis and Applications (Special Issue)*
 
@@ -75,7 +75,7 @@ Below is the output of the smoke test demonstrating successful execution of the 
 ✅ Results and metrics are automatically saved to the `results/` folder  
 ✅ Tested on Python 3.11 + PyTorch 2.0.1 (CPU)
 ## 🧩 Model Flowchart
-![HybridContrastiveTrollDetection Flowchart](Image/flowchart.png)
+![HybridContrastiveTrollDetection Flowchart](Image/Framework)
 
 
 
