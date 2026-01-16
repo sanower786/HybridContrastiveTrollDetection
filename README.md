@@ -8,12 +8,12 @@
 
 This repository contains the official implementation of the research paper:
 
-> **“Hybrid Contrastive Learning with Psycholinguistic Augmentation for Robust Troll Detection”**  
+> **“Hybrid Contrastive classification with text derived Psycholinguistic feature for Troll Detection”**  
 > *Author: Sanower Alam, et al.*  
-> *Submitted to: Pattern Analysis and Applications (PAA), Springer, Special Issue on Cognitive Robustness in AI Systems*
+
 
 Online trolling undermines healthy online discourse and presents major challenges for automated moderation.  
-This work introduces a **Hybrid Contrastive–Classification Framework** that combines contextual language embeddings, psycholinguistic and behavioral features, and dual-loss optimization to enhance robustness and calibration in troll detection systems.
+This work introduces a **Hybrid Contrastive–Classification Framework** that combines contextual language embeddings, text-derived psycholinguistic features, and dual-loss optimization to enhance robustness and calibration in troll detection systems.
 
 The framework achieves:
 - **Accuracy:** 97.0%  
