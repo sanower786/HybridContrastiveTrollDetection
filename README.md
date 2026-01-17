@@ -1,33 +1,48 @@
 # 🧠 Hybrid Contrastive Learning with Text-Derived Psycholinguistic Features for Robust Troll Detection
 
-### Official Replication Repository for the Paper Submitted to *Pattern Analysis and Applications (Special Issue)*
+📖 Overview
+This repository contains the official implementation of the research paper:
+
+**Hybrid Contrastive Classification with Text-Derived Psycholinguistic Features for Troll Detection**  
+Author: Sanower Alam et al.
+
+Online trolling undermines healthy online discourse and presents major challenges for
+automated content moderation. This work proposes a **Hybrid Contrastive–Classification
+Framework** that integrates contextual language embeddings with text-derived
+psycholinguistic and stylistic features, optimized through a dual-loss learning strategy.
+
+The framework is designed to improve both **classification performance** and
+**probability calibration**, without relying on user-level metadata or platform-specific
+signals.
 
 ---
 
-## 📖 Overview
+## 🔐 Information Leakage Prevention
+All auxiliary features used in this repository are extracted strictly at the **comment
+level**. No user-level metadata, temporal posting statistics, author histories, or
+label-derived attributes are used at any stage of training or evaluation.
 
-This repository contains the official implementation of the research paper:
+Dataset splits are created **prior to feature extraction**, ensuring that no information
+from validation or test samples leaks into training. This design guarantees that reported
+performance reflects genuine generalization rather than dataset artifacts.
 
-> **“Hybrid Contrastive classification with text derived Psycholinguistic feature for Troll Detection”**  
-> *Author: Sanower Alam, et al.*  
+---
 
+## 📊 Key Results
+The proposed framework achieves:
 
-Online trolling undermines healthy online discourse and presents major challenges for automated moderation.  
-This work introduces a **Hybrid Contrastive–Classification Framework** that combines contextual language embeddings, text-derived psycholinguistic features, and dual-loss optimization to enhance robustness and calibration in troll detection systems.
-
-The framework achieves:
 - **Accuracy:** 97.0%  
 - **F1-Score:** 0.96  
 - **ROC–AUC:** 0.99  
 - **ECE (Expected Calibration Error):** 0.009  
 - **Brier Score:** 0.027  
 
-This significantly outperforms baseline models such as Logistic Regression, SGD Classifier, BERT, and DistilBERT.
+These results outperform multiple baselines, including Logistic Regression, SGD
+Classifier, BERT, DistilBERT, and RoBERTa.
 
 ---
 
 ## 🧩 Repository Structure
-
 HybridContrastiveTrollDetection/
 │
 ├── data/
@@ -35,7 +50,7 @@ HybridContrastiveTrollDetection/
 │ └── processed_data.npz # Generated embeddings and labels
 │
 ├── models/
-│ └── hybrid_best.pt # Saved model (after training)
+│ └── hybrid_best.pt # Saved trained model
 │
 ├── results/
 │ ├── confusion_matrix.png
@@ -47,15 +62,13 @@ HybridContrastiveTrollDetection/
 │ ├── model_architecture.py # Hybrid projection + classifier
 │ └── utils/
 │ ├── losses.py # Hybrid and contrastive loss functions
-│ ├── metrics.py # ECE, Brier, and evaluation metrics
+│ ├── metrics.py # ECE, Brier, evaluation metrics
 │
-├── preprocess.py # Text cleaning and embedding generation
+├── preprocess.py # Text cleaning and feature extraction
 ├── train_hybrid_model.py # Model training script
-├── evaluate.py # Model evaluation and visualization
-├── requirements.txt # Dependencies list
-└── README.md # Project documentation
-
-### Run Instructions
+├── evaluate.py # Evaluation and visualization
+├── requirements.txt # Dependencies
+└── README.md### Run Instructions
 1. Clone the repository:
    git clone https://github.com/sanower786/HybridContrastiveTrollDetection.git
 2. Create environment:
