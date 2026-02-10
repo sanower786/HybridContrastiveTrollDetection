@@ -38,7 +38,8 @@ The proposed framework achieves:
 - **Brier Score:** 0.027  
 
 These results outperform multiple baselines, including Logistic Regression, SGD
-Classifier, BERT, DistilBERT, and RoBERTa.
+Classifier, BERT, DistilBERT, RoBERTa and The LLM baseline is evaluated independently to preserve the
+design focus on contrastive hybrid representations.
 
 ---
 
