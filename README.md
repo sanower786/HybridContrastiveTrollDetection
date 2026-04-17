@@ -1,45 +1,66 @@
-# 🧠 Hybrid Contrastive Learning with Text-Derived Psycholinguistic Features for Robust Troll Detection
+# 🧠 Hybrid Contrastive–Classification for Detecting Troll-like Behavior
 
-📖 Overview
+📖 **Overview**
+
 This repository contains the official implementation of the research paper:
 
-**Hybrid Contrastive Classification with Text-Derived Psycholinguistic Features for Troll Detection**  
-Author: Sanower Alam et al.
+**Hybrid Contrastive–Classification for Detecting Troll-like Behavior:  
+Integrating Psycholinguistic Features with Calibration-Aware Learning**
 
-Online trolling undermines healthy online discourse and presents major challenges for
-automated content moderation. This work proposes a **Hybrid Contrastive–Classification
-Framework** that integrates contextual language embeddings with text-derived
-psycholinguistic and stylistic features, optimized through a dual-loss learning strategy.
+Online trolling presents a significant challenge for automated moderation systems,
+requiring models that are both accurate and reliable under ambiguous discourse.
+This work proposes a **hybrid contrastive–classification framework** that integrates
+contextual transformer embeddings with text-derived psycholinguistic and stylistic
+features.
 
-The framework is designed to improve both **classification performance** and
-**probability calibration**, without relying on user-level metadata or platform-specific
-signals.
+The framework employs a **dual-loss learning strategy** combining supervised
+contrastive learning and cross-entropy loss to improve both representation quality
+and classification reliability, while maintaining interpretability and computational efficiency.
+
+---
+
+## 🔍 Key Contributions
+
+- Hybrid representation combining transformer embeddings with psycholinguistic features  
+- Dual-loss optimization (Cross-Entropy + Supervised Contrastive Learning)  
+- Calibration-aware evaluation using ECE and Brier Score  
+- Competitive performance compared to traditional ML, transformer, and LLM baselines  
+- Ablation analysis validating feature integration and loss design  
+
+---
+
+## ⚠️ Dataset Note
+
+The dataset is derived from publicly available Reddit discussions and represents
+**flagged or troll-like behavior**. Labels may reflect subjective interpretations
+of online discourse and should be considered as approximations rather than absolute ground truth.
+
+All features are extracted strictly at the **comment level**, without using
+user-level metadata, temporal signals, or label-derived attributes.
 
 ---
 
 ## 🔐 Information Leakage Prevention
-All auxiliary features used in this repository are extracted strictly at the **comment
-level**. No user-level metadata, temporal posting statistics, author histories, or
-label-derived attributes are used at any stage of training or evaluation.
 
-Dataset splits are created **prior to feature extraction**, ensuring that no information
-from validation or test samples leaks into training. This design guarantees that reported
-performance reflects genuine generalization rather than dataset artifacts.
+- Dataset splits are created **prior to feature extraction**
+- No information from validation or test sets is used during training
+- No user history, author metadata, or platform-specific features are included
+
+This ensures that reported results reflect genuine generalization performance.
 
 ---
 
 ## 📊 Key Results
-The proposed framework achieves:
 
 - **Accuracy:** 97.0%  
 - **F1-Score:** 0.96  
-- **ROC–AUC:** 0.99  
+- **ROC–AUC:** ~0.99  
 - **ECE (Expected Calibration Error):** 0.009  
 - **Brier Score:** 0.027  
 
-These results outperform multiple baselines, including Logistic Regression, SGD
-Classifier, BERT, DistilBERT, RoBERTa and The LLM baseline is evaluated independently to preserve the
-design focus on contrastive hybrid representations.
+These results demonstrate **strong and competitive performance** relative to
+traditional machine learning models, transformer-based approaches, and a
+state-of-the-art LLM embedding baseline.
 
 ---
 
@@ -47,11 +68,11 @@ design focus on contrastive hybrid representations.
 HybridContrastiveTrollDetection/
 │
 ├── data/
-│ ├── sample_data.csv # Example dataset (anonymized)
-│ └── processed_data.npz # Generated embeddings and labels
+│ ├── sample_data.csv
+│ └── processed_data.npz
 │
 ├── models/
-│ └── hybrid_best.pt # Saved trained model
+│ └── hybrid_best.pt
 │
 ├── results/
 │ ├── confusion_matrix.png
@@ -60,36 +81,85 @@ HybridContrastiveTrollDetection/
 │ └── metrics_report.txt
 │
 ├── src/
-│ ├── model_architecture.py # Hybrid projection + classifier
+│ ├── model_architecture.py
 │ └── utils/
-│ ├── losses.py # Hybrid and contrastive loss functions
-│ ├── metrics.py # ECE, Brier, evaluation metrics
+│ ├── losses.py
+│ ├── metrics.py
 │
-├── preprocess.py # Text cleaning and feature extraction
-├── train_hybrid_model.py # Model training script
-├── evaluate.py # Evaluation and visualization
-├── requirements.txt # Dependencies
-└── README.md### Run Instructions
-1. Clone the repository:
-   git clone https://github.com/sanower786/HybridContrastiveTrollDetection.git
-2. Create environment:
-   python -m venv .venv
-   pip install -r requirements.txt
-3. Run training:
-   bash run_smoke.sh
+├── preprocess.py
+├── train_hybrid_model.py
+├── evaluate.py
+├── requirements.txt
+└── README.md
+
 
 ---
+
+## 🚀 Run Instructions
+
+### 1. Clone the repository
+
+git clone https://github.com/sanower786/HybridContrastiveTrollDetection.git
+
+cd HybridContrastiveTrollDetection
+
+
+### 2. Create environment and install dependencies
+
+python -m venv .venv
+source .venv/bin/activate # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+
+### 3. Train the model
+
+python train_hybrid_model.py
+
+
+### 4. Evaluate the model
+
+python evaluate.py
+
+
+---
+
 ## 🧪 Execution Proof
 
-Below is the output of the smoke test demonstrating successful execution of the training script:
+The training pipeline has been tested on sample data.
 
-![Execution Screenshot](results/run_success.png)
+- Training script executes successfully  
+- Evaluation metrics and visualizations are generated  
+- Results are saved automatically in the `results/` directory  
 
-✅ The script `train_hybrid_model.py` runs successfully on sample data  
-✅ Results and metrics are automatically saved to the `results/` folder  
-✅ Tested on Python 3.11 + PyTorch 2.0.1 (CPU)
-## 🧩 Model Flowchart
-![HybridContrastiveTrollDetection_Flowchart](Image/Framework.png)
+Tested with:
+- Python 3.11  
+- PyTorch 2.0.1 (CPU)
 
+---
+
+## 🧩 Model Overview
+
+The proposed framework consists of:
+
+1. **Preprocessing**: Text cleaning and normalization  
+2. **Hybrid Embedding Construction**:  
+   - Transformer embeddings (MPNet)  
+   - Psycholinguistic and stylistic features  
+3. **Dual-Branch Architecture**:  
+   - Projection head (contrastive learning)  
+   - Classifier head (cross-entropy loss)  
+4. **Dual-Loss Optimization**:  
+   - Adaptive weighting between objectives  
+
+---
+
+## 📌 Notes
+
+- The framework does not rely on user-level metadata  
+- Designed for **interpretability and deployment efficiency**  
+- Emphasizes **calibration and reliability**, not only accuracy  
+## 📜 License
+
+This project is intended for academic and research purposes.
 
 
