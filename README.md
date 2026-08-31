@@ -1,91 +1,295 @@
-# 🧠 Hybrid Contrastive–Classification for Detecting Troll-like Behavior
+# Hybrid Contrastive–Classification for Detecting Troll-like Behavior
 
-📖 **Overview**
+## Overview
 
-This repository contains the official implementation of the research paper:
+This repository contains the official implementation and experimental resources associated with the research paper:
 
 **Hybrid Contrastive–Classification for Detecting Troll-like Behavior:  
 Integrating Psycholinguistic Features with Calibration-Aware Learning**
 
-Online trolling presents a significant challenge for automated moderation systems,
-requiring models that are both accurate and reliable under ambiguous discourse.
-This work proposes a **hybrid contrastive–classification framework** that integrates
-contextual transformer embeddings with text-derived psycholinguistic and stylistic
-features.
+Online trolling presents a challenging problem for automated content moderation because troll-like behavior can exhibit substantial linguistic variability and overlap with non-trolling discourse.
 
-The proposed framework jointly optimizes supervised contrastive learning and cross-entropy loss to simultaneously improve representation quality, predictive performance, and confidence reliability. Unlike conventional text classification methods, the framework explicitly incorporates calibration-aware evaluation through Expected Calibration Error (ECE) and Brier Score, providing a more reliable solution for large-scale online content moderation.
-## 🔍 Key Contributions
+The proposed framework combines contextual transformer representations with text-derived psycholinguistic and stylistic features in a hybrid learning architecture. The framework jointly optimizes supervised contrastive learning and cross-entropy classification to improve discriminative representation learning while supporting reliable classification.
 
-- Hybrid representation combining transformer embeddings with psycholinguistic features  
-- Dual-loss optimization (Cross-Entropy + Supervised Contrastive Learning)  
-- Calibration-aware evaluation using ECE and Brier Score  
-- Competitive performance compared to traditional machine learning, transformer-based, and representative hybrid architectures
-- Ablation analysis validating feature integration and loss design  
-
-## 📈 Benchmark Models
-
-The proposed framework is evaluated against representative benchmark models spanning multiple methodological categories.
-
-| Category | Models |
-|----------|--------|
-| Traditional Machine Learning | Logistic Regression, Linear SVM, Random Forest |
-| Transformer Models | BERT, DistilBERT |
-| Hybrid Architecture | BCBGA (Bao et al.) |
-| Ablation | Proposed (Cross-Entropy Only) |
-| Proposed | Hybrid Contrastive–Classification |
-
-
-## 📂 Datasets
-
-The proposed framework is evaluated on two publicly available English-language datasets representing complementary abusive language detection scenarios.
-
-### Reddit Troll Dataset
-- Primary benchmark for troll-like behavior detection
-- Binary classification
-- Comment-level annotations
-- Used for model development and primary evaluation
-
-### TRAC Dataset
-- Independent benchmark for aggression detection
-- Binary aggression classification
-- Used to evaluate cross-dataset generalization and robustness
-- Provides a complementary annotation paradigm for online abusive language
-
-Both datasets are publicly available for research purposes. Detailed preprocessing and data partitioning procedures are described in the accompanying paper.
-  
-  ## ⚠️ Dataset Notes
-
-The datasets are derived from publicly available online discussions and represent annotated troll-like or aggressive behavior. Since abusive language annotation is inherently subjective, labels should be interpreted as approximations rather than absolute ground truth.
-
-All features are extracted strictly at the comment level without using user-level metadata, temporal information, or label-derived attributes.
-
-## 🔐 Information Leakage Prevention
-
-- Dataset partitioning is performed before feature extraction and model training. Feature normalization statistics are computed exclusively on the training set and subsequently applied to the validation and test sets. No information from the validation or test partitions is used during model optimization.
-- No information from validation or test sets is used during training
-- No user history, author metadata, or platform-specific features are included
-
-This ensures that reported results reflect genuine generalization performance.
+The study evaluates the proposed approach against traditional machine-learning models, pretrained transformer baselines, a pretrained language-embedding baseline, and a representative hybrid architecture.
 
 ---
 
-### 📊 Experimental Results
+## Key Contributions
 
-### Reddit Benchmark
+- Hybrid representation integrating contextual transformer embeddings with psycholinguistic and stylistic text features.
+- Joint optimization using **supervised contrastive learning and cross-entropy loss**.
+- Evaluation using conventional classification metrics and calibration-oriented measures.
+- Comparison with traditional machine-learning, transformer-based, pretrained language-embedding, and hybrid baselines.
+- Controlled ablation experiments examining the contribution of the learning components.
+- Independent cross-dataset evaluation on the TRAC aggression dataset.
+- Evaluation on a fixed canonical Reddit test partition to ensure consistent comparison across models.
 
-- Accuracy: 97.0%
-- F1-score: 0.96
-- ROC-AUC: ~0.99
-- ECE: 0.009
-- Brier Score: 0.027
+---
 
-### Cross-Dataset Evaluation (TRAC)
+## Experimental Setting
 
-The proposed framework maintains competitive predictive performance and satisfactory calibration on the independent TRAC aggression benchmark, demonstrating its robustness and generalization capability across complementary abusive language detection tasks.
+### Canonical Reddit Dataset
 
-## 🧩 Repository Structure
+The primary experiments use a deduplicated Reddit dataset containing:
 
+- **7,924 unique text instances**
+- Binary classification
+- **5,546 training instances**
+- **1,189 validation instances**
+- **1,189 test instances**
 
+The canonical test set contains:
+
+| Class | Test instances |
+|-------|---------------:|
+| Non-Troll | 219 |
+| Troll | 970 |
+| **Total** | **1,189** |
+
+The train/validation/test partitions are stratified using a fixed random seed of **42**.
+
+The canonical test partition is frozen and is used consistently for the final comparison of all evaluated models.
+
+---
+
+## Cross-Dataset Evaluation
+
+An independent evaluation is conducted using the publicly available **TRAC aggression dataset**.
+
+The TRAC experiment is used to examine cross-dataset behavior under a different annotation setting and data distribution. Because the Reddit and TRAC datasets represent different annotation paradigms and distributions, the cross-dataset results are interpreted as a robustness/generalization assessment rather than as a direct replacement for the canonical Reddit evaluation.
+
+---
+
+## Information Leakage Prevention
+
+The experimental pipeline follows strict separation between training, validation, and test data.
+
+- Dataset partitioning is performed before model training and feature learning.
+- No validation or test samples are used during optimization.
+- Feature normalization statistics are obtained from the training partition and subsequently applied to validation and test data.
+- No user history or author-level metadata is used.
+- No temporal or label-derived attributes are incorporated.
+- All models are evaluated on the same canonical Reddit test partition.
+
+These procedures provide a consistent basis for comparing the evaluated approaches.
+
+---
+
+# Benchmark Models
+
+The study includes several methodological categories of baseline models.
+
+| Category | Models |
+|----------|--------|
+| Traditional Machine Learning | TF-IDF + Logistic Regression |
+| Traditional Machine Learning | TF-IDF + SGD |
+| Transformer Baselines | BERT |
+| Transformer Baselines | DistilBERT |
+| Pretrained Language Embedding | all-MiniLM-L6-v2 + Logistic Regression |
+| Hybrid Baseline | BCBGA |
+| Controlled Ablation | Classification-only |
+| Proposed | Hybrid Contrastive–Classification |
+
+---
+
+# Pretrained Language-Embedding Baseline
+
+A separate pretrained language-embedding baseline is included to evaluate the contribution of contextual semantic representations independently of the proposed hybrid architecture.
+
+### Model
+
+**sentence-transformers/all-MiniLM-L6-v2**
+
+Configuration:
+
+- Embedding dimension: **384**
+- Device: CUDA
+- Batch size: **32**
+- Normalized embeddings: **True**
+- Classifier: Logistic Regression
+
+The embeddings are generated independently for the training, validation, and canonical test partitions and stored for reproducibility.
+
+### Final Reddit Test Performance
+
+| Metric | MiniLM + Logistic Regression |
+|--------|-----------------------------:|
+| Accuracy | **92.43%** |
+| Precision | **0.9297** |
+| Recall | **0.9814** |
+| F1-score | **0.9549** |
+| ROC-AUC | **0.9609** |
+
+The corresponding canonical test confusion matrix is:
+
+| | Predicted Non-Troll | Predicted Troll |
+|---|---:|---:|
+| **True Non-Troll** | 147 | 72 |
+| **True Troll** | 18 | 952 |
+
+The ROC curve and confusion matrix for this pretrained language-embedding baseline are provided separately in the repository results.
+
+---
+
+# Main Experimental Results
+
+The final canonical Reddit test results reported in the manuscript are summarized below.
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|------|---------:|----------:|-------:|----:|--------:|
+| TF-IDF + Logistic Regression | 88.14% | 0.8772 | 0.9938 | 0.9319 | 0.9292 |
+| TF-IDF + SGD | 90.08% | 0.8981 | 0.9907 | 0.9422 | 0.9314 |
+| BERT | 69.30% | 0.8122 | 0.8113 | 0.8118 | 0.4901 |
+| DistilBERT | 81.58% | 0.8158 | 1.0000 | 0.8986 | 0.5214 |
+| Classification-only | 97.56% | 0.9846 | 0.9856 | 0.9851 | 0.9957 |
+| **Proposed Hybrid** | **97.31%** | **0.9796** | **0.9876** | **0.9836** | **0.9947** |
+
+The pretrained MiniLM baseline is reported separately because it constitutes an additional language-embedding baseline:
+
+**MiniLM + Logistic Regression: Accuracy = 92.43%, F1 = 0.9549, ROC-AUC = 0.9609.**
+
+---
+
+# Confusion Matrix and ROC Analysis
+
+The repository contains separate visualizations for the pretrained MiniLM baseline and the main experimental models.
+
+### Pretrained MiniLM Baseline
+
+- `results/minilm_confusion_matrix.png`
+- `results/minilm_roc_curve.png`
+
+The MiniLM baseline achieves a ROC-AUC of **0.9609** on the canonical Reddit test set.
+
+### Main Model Comparisons
+
+ROC curves are provided for:
+
+- TF-IDF + Logistic Regression
+- TF-IDF + SGD
+- BERT
+- DistilBERT
+- Classification-only ablation
+- Proposed Hybrid
+
+The multi-panel ROC analysis uses the same canonical Reddit test partition (**N = 1,189**) for all models.
+
+---
+
+# Ablation Analysis
+
+Controlled ablation experiments are performed to examine the contribution of the proposed learning components.
+
+The classification-only configuration provides a direct comparison with the complete hybrid contrastive–classification framework.
+
+The ablation analysis is intended to determine whether the observed behavior can be attributed solely to the use of a hybrid neural architecture or whether the learning formulation and representation design also contribute to the resulting performance.
+
+---
+
+# Cross-Dataset Evaluation
+
+The proposed framework is additionally evaluated on the independent TRAC aggression dataset.
+
+On TRAC, the model obtained:
+
+- **Accuracy:** 57.96%
+- **Macro-F1:** 0.4098
+- **ROC-AUC:** 0.4985
+
+These results indicate substantial distributional and task differences between the Reddit troll-detection setting and the TRAC aggression benchmark.
+
+The cross-dataset results are therefore reported as an independent robustness assessment and should not be interpreted as evidence of uniformly strong transfer across datasets.
+
+---
+
+# Model Architecture
+
+The proposed framework consists of the following major stages.
+
+### 1. Text Preprocessing
+
+- Text cleaning and normalization
+- Tokenization
+- Linguistic feature preparation
+
+### 2. Hybrid Representation
+
+The framework combines:
+
+- Contextual transformer representations
+- Psycholinguistic features
+- Stylistic features
+- Lexical and readability-related features
+
+### 3. Shared Representation Network
+
+The resulting representation is processed through a shared learning architecture containing:
+
+- A projection head for supervised contrastive learning
+- A classification head for troll prediction
+
+### 4. Joint Optimization
+
+The model is trained using a combined objective consisting of:
+
+- Cross-Entropy Loss
+- Supervised Contrastive Loss
+
+The two objectives are jointly optimized through the loss-weighting formulation described in the paper.
+
+### 5. Evaluation
+
+The framework is evaluated using:
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- Expected Calibration Error (ECE)
+- Brier Score
+- Confusion matrices
+- ROC curves
+- Confidence analysis
+- Cross-dataset evaluation
+
+---
+
+# Training Configuration
+
+| Parameter | Value |
+|-----------|-------|
+| Optimizer | AdamW |
+| Learning Rate | `2e-5` |
+| Weight Decay | `0.01` |
+| Maximum Epochs | `5` |
+| Batch Size | `16` |
+| Evaluation Batch Size | `32` |
+| Maximum Sequence Length | `128` |
+| Random Seed | `42` |
+| Early Stopping Patience | `2` |
+
+Early stopping is based on validation F1-score, and the checkpoint achieving the best validation F1-score is retained for final evaluation on the held-out canonical test set.
+
+---
+
+# Reliability Evaluation
+
+In addition to classification performance, the study considers prediction reliability using:
+
+- Expected Calibration Error (ECE)
+- Brier Score
+- Reliability diagrams
+- Confidence distribution analysis
+
+These measures complement conventional classification metrics by examining the quality of model confidence.
+
+---
+
+# Repository Structure
+
+```text
 HybridContrastiveTrollDetection/
 │
 ├── data/
@@ -107,6 +311,8 @@ HybridContrastiveTrollDetection/
 ├── results/
 │   ├── confusion_matrix.png
 │   ├── roc_curve.png
+│   ├── minilm_confusion_matrix.png
+│   ├── minilm_roc_curve.png
 │   ├── calibration_curve.png
 │   ├── confidence_distribution.png
 │   ├── reliability_diagram.png
@@ -126,128 +332,3 @@ HybridContrastiveTrollDetection/
 ├── evaluate.py
 ├── requirements.txt
 └── README.md
-
-
-## 🚀 Run Instructions
-
-### 1. Clone the repository
-
-git clone https://github.com/sanower786/HybridContrastiveTrollDetection.git
-
-cd HybridContrastiveTrollDetection
-
-
-### 2. Create environment and install dependencies
-
-python -m venv .venv
-source .venv/bin/activate # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-
-### 3. Train the model
-
-python train_hybrid_model.py
-
-
-### 4. Evaluate the model
-
-python evaluate.py
-
-
----
-
-## 🧪 Execution Proof
-
-The training pipeline has been tested on sample data.
-
-- Training script executes successfully  
-- Evaluation metrics and visualizations are generated  
-- Results are saved automatically in the `results/` directory  
-
-- Tested with
-
- Python 3.11
-
- PyTorch 2.5.1
-
- CUDA 12.1
-
- NVIDIA RTX A4000 GPU
-
-
-
-## 🧩 Model Overview
-
-The proposed framework is designed to provide robust and reliable troll detection by integrating complementary linguistic representations within a unified calibration-aware learning framework. The model is evaluated on both the Reddit Troll Dataset and the TRAC Aggression Dataset to assess predictive performance, confidence reliability, and cross-dataset generalization.
-
-The framework consists of the following stages:
-
-1. **Data Preprocessing**
-   - Text cleaning and normalization
-   - Tokenization and feature preparation
-
-2. **Hybrid Feature Representation**
-   - Contextual transformer embeddings (MPNet)
-   - Psycholinguistic features
-   - Stylistic features
-   - Lexical and readability features
-
-3. **Hybrid Contrastive–Classification Architecture**
-   - Shared feature encoder
-   - Projection head for supervised contrastive learning
-   - Classification head for troll prediction
-
-4. **Dual-Loss Optimization**
-   - Cross-Entropy Loss
-   - Supervised Contrastive Loss
-   - Joint optimization through adaptive loss weighting
-
-5. **Evaluation and Reliability Analysis**
-   - Classification metrics (Accuracy, Precision, Recall, F1-score, ROC-AUC)
-   - Calibration metrics (ECE and Brier Score)
-   - Confidence distribution analysis
-   - Cross-dataset evaluation on the TRAC benchmark
-   ## ⚙️ Training Configuration
-
-| Parameter | Value |
-|-----------|-------|
-| Optimizer | AdamW |
-| Learning Rate | 2e-5 |
-| Weight Decay | 0.01 |
-| Epochs | 5 |
-| Batch Size | 16 |
-| Evaluation Batch Size | 32 |
-| Maximum Sequence Length | 128 |
-| Random Seed | 42 |
-
-## 📉 Reliability Evaluation
-
-Beyond conventional classification metrics, the framework evaluates prediction reliability using:
-
-- Expected Calibration Error (ECE)
-
-- Brier Score
-
-- Reliability Diagram
-
-- Confidence Distribution Analysis
-
- ## 🔬 Reproducibility
-
-To facilitate reproducible research:
-
-• Fixed random seed (42)
-
-• Stratified Train/Validation/Test split
-
-• Unified preprocessing pipeline
-
-• Standardized hyperparameters across transformer baselines
-
-• Evaluation on independent datasets
-
-• Public implementation
-
-This project is intended for academic and research purposes.
-
-
