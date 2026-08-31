@@ -7,6 +7,9 @@ sentence-transformers>=2.7.0
 # Machine Learning
 scikit-learn>=1.6.0
 joblib>=1.4.0
+sentence-transformers
+
+
 
 # Data Processing
 pandas>=2.2.0

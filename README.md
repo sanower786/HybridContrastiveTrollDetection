@@ -2,34 +2,42 @@
 
 ## Overview
 
-This repository contains the official implementation and experimental resources associated with the research paper:
+Online trolling presents a challenging problem for automated content
+moderation because troll-like behavior can exhibit substantial linguistic
+variability and overlap with non-trolling discourse.
 
-**Hybrid Contrastive–Classification for Detecting Troll-like Behavior:  
-Integrating Psycholinguistic Features with Calibration-Aware Learning**
+This repository implements a hybrid contrastive–classification framework
+that combines contextual transformer representations with text-derived
+linguistic features.
 
-Online trolling presents a challenging problem for automated content moderation because troll-like behavior can exhibit substantial linguistic variability and overlap with non-trolling discourse.
+The framework jointly optimizes supervised contrastive learning and
+cross-entropy classification. The study evaluates the resulting model using
+conventional predictive metrics together with representation-level,
+calibration, confidence, and cross-dataset analyses.
 
-The proposed framework combines contextual transformer representations with text-derived psycholinguistic and stylistic features in a hybrid learning architecture. The framework jointly optimizes supervised contrastive learning and cross-entropy classification to improve discriminative representation learning while supporting reliable classification.
-
-The study evaluates the proposed approach against traditional machine-learning models, pretrained transformer baselines, a pretrained language-embedding baseline, and a representative hybrid architecture.
-
----
+The proposed framework is compared with traditional machine-learning
+baselines, transformer-based baselines, a pretrained language-embedding
+baseline, and a representative hybrid architecture.
 
 ## Key Contributions
 
-- Hybrid representation integrating contextual transformer embeddings with psycholinguistic and stylistic text features.
-- Joint optimization using **supervised contrastive learning and cross-entropy loss**.
-- Evaluation using conventional classification metrics and calibration-oriented measures.
-- Comparison with traditional machine-learning, transformer-based, pretrained language-embedding, and hybrid baselines.
-- Controlled ablation experiments examining the contribution of the learning components.
+- Hybrid representation integrating contextual transformer embeddings with
+  complementary linguistic features.
+- Joint optimization using supervised contrastive learning and
+  cross-entropy loss.
+- Projection head for representation-level contrastive learning.
+- Classification head for troll/non-troll prediction.
+- Evaluation using Accuracy, Precision, Recall, F1-score, and ROC-AUC.
+- Calibration analysis using Expected Calibration Error (ECE) and Brier Score.
+- Representation analysis using embedding visualization and cluster-validity
+  measures.
+- Controlled comparison with a classification-only baseline.
+- Separate pretrained MiniLM + Logistic Regression baseline.
 - Independent cross-dataset evaluation on the TRAC aggression dataset.
-- Evaluation on a fixed canonical Reddit test partition to ensure consistent comparison across models.
 
----
+# Experimental Setting
 
-## Experimental Setting
-
-### Canonical Reddit Dataset
+## Canonical Reddit Dataset
 
 The primary experiments use a deduplicated Reddit dataset containing:
 
@@ -41,25 +49,63 @@ The primary experiments use a deduplicated Reddit dataset containing:
 
 The canonical test set contains:
 
-| Class | Test instances |
+| Class | Test Instances |
 |-------|---------------:|
 | Non-Troll | 219 |
 | Troll | 970 |
 | **Total** | **1,189** |
 
-The train/validation/test partitions are stratified using a fixed random seed of **42**.
+The train/validation/test partitions are stratified using a fixed random seed
+of **42**.
 
-The canonical test partition is frozen and is used consistently for the final comparison of all evaluated models.
+The canonical test partition is frozen and is used consistently for the
+principal model comparisons.
 
----
+# Benchmark Models
 
-## Cross-Dataset Evaluation
+The study evaluates models from several methodological categories.
 
-An independent evaluation is conducted using the publicly available **TRAC aggression dataset**.
+| Category | Model |
+|----------|-------|
+| Traditional Machine Learning | TF-IDF + Logistic Regression |
+| Traditional Machine Learning | TF-IDF + SGD |
+| Transformer Baseline | BERT |
+| Transformer Baseline | DistilBERT |
+| Pretrained Language Embedding | all-MiniLM-L6-v2 + Logistic Regression |
+| Hybrid Baseline | BCBGA |
+| Controlled Ablation | Classification-only |
+| Proposed | Hybrid Contrastive–Classification |
 
-The TRAC experiment is used to examine cross-dataset behavior under a different annotation setting and data distribution. Because the Reddit and TRAC datasets represent different annotation paradigms and distributions, the cross-dataset results are interpreted as a robustness/generalization assessment rather than as a direct replacement for the canonical Reddit evaluation.
-
----
+  Input Comment
+                         |
+                         v
+                Text Preprocessing
+                         |
+              +----------+----------+
+              |                     |
+              v                     v
+       MPNet Representation    Linguistic Features
+              |                     |
+              +----------+----------+
+                         |
+                         v
+               Hybrid Representation
+                         |
+                         v
+                  Shared Network
+                         |
+                +--------+--------+
+                |                 |
+                v                 v
+         Projection Head    Classification Head
+                |                 |
+                v                 v
+          SupCon Loss          CE Loss
+                |                 |
+                +--------+--------+
+                         |
+                         v
+                 Joint Optimization
 
 ## Information Leakage Prevention
 
@@ -76,22 +122,6 @@ These procedures provide a consistent basis for comparing the evaluated approach
 
 ---
 
-# Benchmark Models
-
-The study includes several methodological categories of baseline models.
-
-| Category | Models |
-|----------|--------|
-| Traditional Machine Learning | TF-IDF + Logistic Regression |
-| Traditional Machine Learning | TF-IDF + SGD |
-| Transformer Baselines | BERT |
-| Transformer Baselines | DistilBERT |
-| Pretrained Language Embedding | all-MiniLM-L6-v2 + Logistic Regression |
-| Hybrid Baseline | BCBGA |
-| Controlled Ablation | Classification-only |
-| Proposed | Hybrid Contrastive–Classification |
-
----
 
 # Pretrained Language-Embedding Baseline
 
@@ -254,7 +284,6 @@ The framework is evaluated using:
 - Confidence analysis
 - Cross-dataset evaluation
 
----
 
 # Training Configuration
 
@@ -272,7 +301,6 @@ The framework is evaluated using:
 
 Early stopping is based on validation F1-score, and the checkpoint achieving the best validation F1-score is retained for final evaluation on the held-out canonical test set.
 
----
 
 # Reliability Evaluation
 
@@ -285,11 +313,8 @@ In addition to classification performance, the study considers prediction reliab
 
 These measures complement conventional classification metrics by examining the quality of model confidence.
 
----
 
-# Repository Structure
 
-```text
 HybridContrastiveTrollDetection/
 │
 ├── data/
@@ -297,38 +322,29 @@ HybridContrastiveTrollDetection/
 │   ├── trac/
 │   └── processed/
 │
-├── baselines/
-│   ├── logistic_regression.py
-│   ├── svm.py
-│   ├── random_forest.py
-│   ├── bert.py
-│   ├── distilbert.py
-│   └── bcbga.py
-│
-├── models/
-│   └── hybrid_best.pt
+├── Image/
 │
 ├── results/
-│   ├── confusion_matrix.png
-│   ├── roc_curve.png
-│   ├── minilm_confusion_matrix.png
-│   ├── minilm_roc_curve.png
-│   ├── calibration_curve.png
-│   ├── confidence_distribution.png
-│   ├── reliability_diagram.png
-│   └── metrics_report.txt
+│   ├── Figure_MiniLM_ROC_Curve.png
+│   ├── Figure_MiniLM_Confusion_Matrix.png
+│   ├── confusion_matrix/
+│   ├── roc/
+│   
 │
 ├── src/
+│   ├── __init__.py
 │   ├── model_architecture.py
-│   ├── hybrid_embedding.py
 │   └── utils/
-│       ├── losses.py
-│       ├── metrics.py
-│       ├── calibration.py
-│       └── visualization.py
+│       
 │
 ├── preprocess.py
 ├── train_hybrid_model.py
 ├── evaluate.py
+│
+├── smoke_test.py
+├── smoke_test.sh
+├── run_smoke.sh
+│
 ├── requirements.txt
+├── .gitignore
 └── README.md
